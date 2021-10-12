@@ -4,11 +4,9 @@ import org.keycloak.admin.client.Keycloak;
 import org.keycloak.representations.idm.ClientRepresentation;
 import org.keycloak.representations.idm.RealmRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.ws.rs.core.Response;
 import java.util.List;
 
 @RequestMapping("/keycloak")
@@ -33,5 +31,16 @@ public class KeycloakController {
     @GetMapping("/realms/{realm}/users")
     public List<UserRepresentation> getUsers(@PathVariable String realm) {
         return keycloak.realm(realm).users().list();
+    }
+
+    @GetMapping("/realms/{realm}/users/create")
+    public void createUser(@PathVariable String realm) {
+        UserRepresentation user = new UserRepresentation();
+        user.setUsername("york");
+        user.setEmail("york@123.com");
+        user.setEmailVerified(true);
+        user.setEnabled(false);
+        Response response = keycloak.realm(realm).users().create(user);
+        System.out.println("response = " + response);
     }
 }
